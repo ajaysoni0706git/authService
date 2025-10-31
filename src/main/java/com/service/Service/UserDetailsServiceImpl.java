@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.Objects;
+import java.util.UUID;
 
 @Service
 @Data
@@ -38,21 +39,15 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return userRepo.findByUsername(userDto.getUsername());
     }
 
-    public Boolean signUpUser(UserDto userDto) {
+    public String signUpUser(UserDto userDto) {
 
-        if(Objects.nonNull(checkIfUserExists(userDto))) {
-            return false;
-        }
         userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
-
-        String userId = java.util.UUID.randomUUID().toString();
-        userRepo.save(new User(
-                userId,
-                userDto.getUsername(),
-                userDto.getPassword(),
-                new HashSet<>()
-        ));
-
-        return true;
+        if(Objects.nonNull(checkIfUserExists(userDto))){
+            return null;
+        }
+        String userId = UUID.randomUUID().toString();
+        User user = new User(userId, userDto.getUsername(), userDto.getPassword(), new HashSet<>());
+        userRepo.save(user);
+        return userId;
     }
 }
