@@ -1,12 +1,12 @@
 package com.service.config;
 
-import io.github.cdimascio.dotenv.Dotenv;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import org.springframework.beans.factory.annotation.Autowired;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,11 +14,11 @@ import java.util.function.Function;
 
 @Service
 public class JwtService {
-    @Autowired
-    private Dotenv dotenv;
 
-    private final String SECRET = dotenv.get("SecretKey");
+    private final String SECRET = "myverysecretkeythatis32byteslong!";
     private static final long EXPIRATION_MS = 86400000; // 1000(1sec)*60(1min)*60(1hour)*24(24hours) = 86400000 equals 1Day
+
+    private final SecretKey secretKey = Keys.hmacShaKeyFor(SECRET.getBytes());
 
     public String GenerateToken(String username){
         Map<String, Object> claims = new HashMap<>();
@@ -32,7 +32,7 @@ public class JwtService {
                 .setSubject(username)
                 .setIssuedAt(new java.util.Date(System.currentTimeMillis()))
                 .setExpiration(new java.util.Date(System.currentTimeMillis() + EXPIRATION_MS))
-                .signWith(io.jsonwebtoken.security.Keys.hmacShaKeyFor(SECRET.getBytes()))
+                .signWith(secretKey)
                 .compact();
     }
 
@@ -52,7 +52,7 @@ public class JwtService {
     private Claims extractAllClaims(String token) {
         return Jwts
                 .parser()
-                .setSigningKey(SECRET)
+                .setSigningKey(secretKey)
                 .build()
                 .parseClaimsJws(token)
                 .getBody();

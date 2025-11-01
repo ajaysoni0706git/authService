@@ -58,8 +58,9 @@ public class AuthController {
         }
     }
 
-    @GetMapping("auth/login")
-    public ResponseEntity<?> login(@RequestBody AuthRequestDto authRequestDto) {
+    @PostMapping("auth/login")
+    public ResponseEntity<JwtResponseDto> login(@RequestBody AuthRequestDto authRequestDto) {
+
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequestDto.getUsername(), authRequestDto.getPassword()));
 
         if(authentication.isAuthenticated()) {
@@ -78,7 +79,7 @@ public class AuthController {
         return new  ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
 
-       @GetMapping("auth/refreshToken")
+       @PostMapping("auth/refreshToken")
        public ResponseEntity<?> refreshToken(@RequestBody RefreshTokenRequestDto refreshTokenRequestDto) {
            Optional<RefreshTokens> refreshTokenOpt = refreshTokenService.findByToken(refreshTokenRequestDto.getToken());
 

@@ -1,0 +1,21 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: authService
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/authServiceDb
+    username: postgres
+    password: BatmanPostgres*#0706#
+
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+#        default_schema: authService

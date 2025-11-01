@@ -12,6 +12,4 @@ public class UserDto extends User {
     private String lastName;
 
     private Long phoneNumber;
-
-    private String email;
 }
