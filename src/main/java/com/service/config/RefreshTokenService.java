@@ -30,7 +30,7 @@ public class RefreshTokenService {
         return refreshTokenRepo.save(refreshTokens);
     }
 
-    public Optional<?> findByToken(String token){
+    public Optional<RefreshTokens> findByToken(String token){
         return refreshTokenRepo.findByToken(token);
     }
 

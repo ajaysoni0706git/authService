@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -49,5 +50,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         User user = new User(userId, userDto.getUsername(), userDto.getPassword(), new HashSet<>());
         userRepo.save(user);
         return userId;
+    }
+
+    public String getUserByUsername(String userName){
+        return Optional.of(userRepo.findByUsername(userName)).map(User::getUserId).orElse(null);
     }
 }
